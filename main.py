@@ -36,41 +36,53 @@ def evaluate_chunk(left,right,operator):
                 return left/right
             case '^':
                 return left**right
-        
-
+ 
+def find_corresponding_parenthesis(expr,index):
+    depth = 0
+    i = index
+    looping=True
+    while not (expr[i] == ')' and depth == 0):
+        i+=1
+    return i
 
 def evaluate_expression(expression:str):
-    print(expression)
-    if sum(map(expression.count, ['+','-','*','/','^'])) == 0:
+    if sum(map(expression.count, ['+','-','*','/','^','(',')'])) == 0:
         return float(expression.strip())
     else:
-        #Find the index of the operation to evaluate
-        if expression.count('^') > 0:
-            index = expression.find('^')
-        if sum(map(expression.count, ['*','/'])) > 0:
-            mult_index = expression.find('*')
-            if mult_index == -1: mult_index=len(expression)
-            div_index = expression.find('/')
-            if div_index == -1: div_index=len(expression)
-            index = min(mult_index,div_index)
-        elif sum(map(expression.count, ['+','-'])) > 0:
-            add_index = expression.find('+')
-            if add_index == -1: add_index=len(expression)
-            sub_index = expression.find('-')
-            if sub_index == -1: sub_index=len(expression)
-            index = min(add_index,sub_index)
+        # Parenthesis handling
+        if expression.count('(') > 0:
+            left_index = expression.find('(')
+            right_index = find_corresponding_parenthesis(expression,left_index)
+            value = evaluate_expression(expression[left_index+1:right_index])
 
-        #Find the chunk around the operator
-        left_index,right_index = find_chunk(expression,index)
-        #Get the values in the chunk
-        left = expression[left_index:index]
-        right = expression[index+1:right_index+1]
-        #Evaluate chunk
-        value = evaluate_chunk(left,right,expression[index])
+        else:
+            #Find the index of the operation to evaluate
+            if expression.count('^') > 0:
+                index = expression.find('^')
+            elif sum(map(expression.count, ['*','/'])) > 0:
+                mult_index = expression.find('*')
+                if mult_index == -1: mult_index=len(expression)
+                div_index = expression.find('/')
+                if div_index == -1: div_index=len(expression)
+                index = min(mult_index,div_index)
+            elif sum(map(expression.count, ['+','-'])) > 0:
+                add_index = expression.find('+')
+                if add_index == -1: add_index=len(expression)
+                sub_index = expression.find('-')
+                if sub_index == -1: sub_index=len(expression)
+                index = min(add_index,sub_index)
+
+            #Find the chunk around the operator
+            left_index,right_index = find_chunk(expression,index)
+            #Get the values in the chunk
+            left = expression[left_index:index]
+            right = expression[index+1:right_index+1]
+            #Evaluate chunk
+            value = evaluate_chunk(left,right,expression[index])
 
         #Construct new string
         new_expression=expression[:left_index]+str(value)+expression[right_index+1:]
-        evaluate_expression(new_expression)
+        return evaluate_expression(new_expression)
 
 
 def main():
