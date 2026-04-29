@@ -46,6 +46,7 @@ def find_corresponding_parenthesis(expr,index):
     return i
 
 def evaluate_expression(expression:str):
+    expression = expression.replace(' ','')
     if sum(map(expression.count, ['+','-','*','/','^','(',')'])) == 0:
         return float(expression.strip())
     else:
