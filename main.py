@@ -35,7 +35,7 @@ def evaluate_chunk(left,right,operator):
             case '/':
                 return left/right
             case '^':
-                return left/right
+                return left**right
         
 
 
@@ -45,6 +45,8 @@ def evaluate_expression(expression:str):
         return float(expression.strip())
     else:
         #Find the index of the operation to evaluate
+        if expression.count('^') > 0:
+            index = expression.find('^')
         if sum(map(expression.count, ['*','/'])) > 0:
             mult_index = expression.find('*')
             if mult_index == -1: mult_index=len(expression)
