@@ -1,5 +1,5 @@
 NUMBERS = [str(n) for n in range(10)]+['.']
-
+import math
 
 def find_chunk(expr:str,index:str):
     left_index=index-1
@@ -48,7 +48,7 @@ def find_corresponding_parenthesis(expr,index):
 def evaluate_expression(expression:str):
     expression = expression.replace(' ','')
     if sum(map(expression.count, ['+','-','*','/','^','(',')'])) == 0:
-        return float(expression.strip())
+        return float(expression)
     else:
         # Parenthesis handling
         if expression.count('(') > 0:
