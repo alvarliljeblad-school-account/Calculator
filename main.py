@@ -34,6 +34,8 @@ def evaluate_chunk(left, right, operator):
         case "*":
             return left * right
         case "/":
+            if right == 0:
+                return "ERROR: Division by 0 not allowed"
             return left / right
         case "^":
             return left**right
@@ -86,7 +88,9 @@ def evaluate_expression(expression: str):
             right = expression[index + 1 : right_index + 1]
             # Evaluate chunk
             value = evaluate_chunk(left, right, expression[index])
-
+        
+        if type(value) == str:
+            return value
         # Construct new string
         new_expression = (
             expression[:left_index] + str(value) + expression[right_index + 1 :]
@@ -95,12 +99,16 @@ def evaluate_expression(expression: str):
 
 
 def main():
-    print("Please enter an expression")
-    expression = input("->")
-    return_value = evaluate_expression(expression)
-    print(return_value)
+    running = True
+    while running:
+        print('Please enter an expression(q to quit)')
+        expression = input('->')
+        if expression == 'q':
+            running = False
+        else:
+            return_value = evaluate_expression(expression)
+            print(return_value)
 
 
 if __name__ == "__main__":
     main()
-
