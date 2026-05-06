@@ -2,7 +2,7 @@
 NUMBERS = [str(n) for n in range(10)] + ["."]
 
 
-def find_chunk(expr: str, index: str):
+def find_chunk(expr: str, index: int):
     """
     Finds the chunk of numbers surrounding an operator at index index in expression expr
     Returns the indexes of the ends of the chunk
