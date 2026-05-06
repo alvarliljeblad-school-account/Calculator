@@ -65,8 +65,12 @@ def find_corresponding_parenthesis(expr, index):
     """
     # checks how many parentheis deep it is when another parentesis is found at the same depth return its index
     depth = 0
-    i = index
+    i = index+1
     while not (expr[i] == ")" and depth == 0):
+        if expr[i] == '(':
+            depth +=1
+        elif expr[i] == ')':
+            depth -=1
         i += 1
     return i
 
