@@ -1,5 +1,5 @@
 # A list of symbols that represent numbers
-NUMBERS = [str(n) for n in range(10)] + ["."]
+NUMBERS = [str(n) for n in range(10)] + [".","-"]
 
 
 def find_chunk(expr: str, index: int):
@@ -45,7 +45,7 @@ def evaluate_chunk(left, right, operator):
     match operator:
         case "+":
             return left + right
-        case "-":
+        case "s":
             return left - right
         case "*":
             return left * right
@@ -74,6 +74,13 @@ def find_corresponding_parenthesis(expr, index):
         i += 1
     return i
 
+def format_subtraction(expr):
+    for i in range(len(expr)):
+        if expr[i] == '-':
+            if expr[i-1] in [str(n) for n in range(10)] and not i== 0:
+                expr = expr[:i] + 's' + expr[i+1:]
+    return expr
+                
 
 def evaluate_expression(expression: str):
     """
@@ -82,8 +89,10 @@ def evaluate_expression(expression: str):
     """
     #Remove all spaces in the string
     expression = expression.replace(" ", "")
+    expression = format_subtraction(expression)
+    print(expression)
     # If the expression has no operators, return the number value
-    if sum(map(expression.count, ["+", "-", "*", "/", "^", "(", ")"])) == 0:
+    if sum(map(expression.count, ["+", "s", "*", "/", "^", "(", ")"])) == 0:
         return float(expression)
     else:
         # Parenthesis handlig
@@ -107,11 +116,11 @@ def evaluate_expression(expression: str):
                 if div_index == -1:
                     div_index = len(expression)
                 index = min(mult_index, div_index)
-            elif sum(map(expression.count, ["+", "-"])) > 0:
+            elif sum(map(expression.count, ["+", "s"])) > 0:
                 add_index = expression.find("+")
                 if add_index == -1:
                     add_index = len(expression)
-                sub_index = expression.find("-")
+                sub_index = expression.find("s")
                 if sub_index == -1:
                     sub_index = len(expression)
                 index = min(add_index, sub_index)
@@ -129,8 +138,9 @@ def evaluate_expression(expression: str):
             return value
         # Construct new string
         new_expression = (
-            expression[:left_index] + str(value) + expression[right_index + 1 :]
+            expression[:left_index] + f"{value:.20f}" + expression[right_index + 1 :]
         )
+        print(new_expression)
         # recursively evaluate until there is only a number left
         return evaluate_expression(new_expression)
 
